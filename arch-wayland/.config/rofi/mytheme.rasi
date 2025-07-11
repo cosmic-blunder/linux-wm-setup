@@ -1,0 +1,11 @@
+* {
+    background: #1e1e2e;
+    foreground: #cdd6f4;
+    border-color: #89b4fa;
+    border-radius: 10px;
+    selected-normal-background: #89b4fa;
+    selected-normal-foreground: #1e1e2e;
+    spacing: 10;
+    margin: 10;
+}
+

@@ -1,0 +1,60 @@
+#!/bin/bash
+
+# Battery notification script for Hyprland
+# Notifies when battery is below 50% or has less than 30 minutes remaining
+
+# Notification thresholds
+LOW_BATTERY_PERCENT=90
+LOW_TIME_MINUTES=50
+
+# How often to check battery status (in seconds)
+CHECK_INTERVAL=3
+
+# Notification icons (change these to icons you have available)
+ICON_WARNING="battery-low"
+ICON_CRITICAL="battery-empty"
+
+# Function to send notification
+send_notification() {
+    local urgency="$1"
+    local title="$2"
+    local message="$3"
+    local icon="$4"
+    
+    notify-send -u "$urgency" -i "$icon" "$title" "$message"
+}
+
+# Function to get battery information
+get_battery_info() {
+    # Get battery percentage
+    local bat_percent=$(cat /sys/class/power_supply/BAT*/capacity | head -n1)
+    
+    # Get battery status (Charging/Discharging)
+    local bat_status=$(cat /sys/class/power_supply/BAT*/status | head -n1)
+    
+    # Get remaining time (in minutes)
+    local remaining_time=$(acpi -b | grep -Po '\d+:\d{2}:\d{2}' | head -n1)
+    local minutes=$(echo $remaining_time | awk -F: '{print $1*60 + $2}')
+    
+    echo "$bat_percent $bat_status $minutes"
+}
+
+# Main loop
+while true; do
+    read bat_percent bat_status minutes <<< $(get_battery_info)
+    
+    # Only notify if discharging
+    if [ "$bat_status" = "Discharging" ]; then
+        # Check battery percentage
+        if [ "$bat_percent" -le "$LOW_BATTERY_PERCENT" ]; then
+            send_notification "normal" "Battery Low" "Battery is at ${bat_percent}%" "$ICON_WARNING"
+        fi
+        
+        # Check remaining time
+        if [ "$minutes" -ne 0 ] && [ "$minutes" -le "$LOW_TIME_MINUTES" ]; then
+            send_notification "critical" "Low Battery Time" "Approximately ${minutes} minutes remaining" "$ICON_CRITICAL"
+        fi
+    fi
+    
+    sleep $CHECK_INTERVAL
+done

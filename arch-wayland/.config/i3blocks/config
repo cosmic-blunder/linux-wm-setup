@@ -1,0 +1,23 @@
+[CPU]
+command=top -bn1 | grep "Cpu(s)" | awk '{printf "CPU: %.0f%%", 100 - $8}'
+interval=5
+
+[Temp]
+command=echo "Temp: $(($(cat /sys/class/thermal/thermal_zone0/temp)/1000))°C"
+interval=5
+
+[Memory]
+command=free -h | awk '/Mem:/ {print "RAM: " $3 "/" $2}' | sed 's/i//g'
+interval=10
+
+[Disk]
+command=df -h / | awk 'NR==2 {print "Disk: " $4 "/" $2}' | sed 's/i//g'
+interval=60
+
+[Battery]
+command=acpi -b | awk -F', ' '{print "Battery: " $2}'
+interval=30
+
+[Time]
+command=date '+%H:%M  %d-%m-%Y'
+interval=1

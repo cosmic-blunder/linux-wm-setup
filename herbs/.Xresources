@@ -1,0 +1,16 @@
+! xcalc settings
+# include ".config/xresources.d/xcalc/xcalc.conf"
+
+! urxvt colours 
+# include ".config/xresources.d/xcolours/antix.conf"
+
+xterm*cursorColor: white
+xterm*font: 9x15
+
+
+
+xterm*faceName: "Fira Mono"
+xterm*faceSize:14
+xterm*background: black
+xterm*foreground: white
+

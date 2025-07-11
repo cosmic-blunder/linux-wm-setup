@@ -1,0 +1,21 @@
+#!/bin/bash
+
+
+
+THEME='Flat-Remix-GTK-Blue-Dark'
+ICONS='Flat-Remix-Blue-Dark'
+FONT=''
+CURSOR=''
+
+SCHEMA='gsettings set org.gnome.desktop.interface'
+
+
+apply_themes(){
+
+               ${SCHEME} gtk-theme "$THEME"
+               ${SCHEME} icon-theme "$ICONS"
+               ${SCHEME} cursor-theme "$CURSOR"
+               ${SCHEME} font-name "$FONT"
+
+}
+
