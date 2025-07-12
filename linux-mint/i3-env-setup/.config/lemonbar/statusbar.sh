@@ -142,7 +142,7 @@ get_ram_usage(){
     else
         COLOR="#ff0000"  # Red
     fi
-    echo "%{F$COLOR}$MEM%{F-}"
+    echo "%{F$COLOR}$MEM% %{F-}"
 }
 
 # Main loop
