@@ -41,8 +41,38 @@ get_audio(){
      echo "$VOL"   
 }
 
-
 get_battery_status() {
+    BAT_PATH="/sys/class/power_supply/BAT1"
+    CAPACITY=$(cat "$BAT_PATH/capacity")
+    STATUS=$(cat "$BAT_PATH/status")
+
+    # Choose icon
+    if [ "$STATUS" = "Charging" ]; then
+        ICON="⚡"
+    elif [ "$CAPACITY" -gt 80 ]; then
+        ICON=""
+    elif [ "$CAPACITY" -gt 60 ]; then
+        ICON=""
+    elif [ "$CAPACITY" -gt 40 ]; then
+        ICON=""
+    elif [ "$CAPACITY" -gt 20 ]; then
+        ICON=""
+    else
+        ICON=""
+    fi
+
+    # Color based on level
+    if [ "$CAPACITY" -gt 70 ]; then
+        COLOR="#00ff00"
+    elif [ "$CAPACITY" -gt 40 ]; then
+        COLOR="#ffff00"
+    else
+        COLOR="#ff0000"
+    fi
+
+    echo "%{F$COLOR} $ICON $CAPACITY%% ($STATUS) %{F-}"
+}
+_get_battery_status() {
     BAT_PATH="/sys/class/power_supply/BAT1"
     CAPACITY=$(cat "$BAT_PATH/capacity")
     STATUS=$(cat "$BAT_PATH/status")
@@ -155,6 +185,5 @@ while true; do
     DATE1=$(date '+%Y-%m-%d %H:%M:%S (%A)')
     DATE=$(echo "%{F#00ff00}${DATE1}%{F-}")
     VOL=$(get_audio)
-    echo  "BAT:$BAT | $VOL | CPU: $CPU, TEMP: $CPU_TEMP | RAM: $MEM | NET: $NET | $DATE|"
-done | lemonbar -g 2560x29+0+0 -b "#222222" -F "#ffffff"  -f "DejaVu Sans Mono-12" -f "Ubuntu:style=Bold-10"                                                                        
-~                                                                                                                                                     
+    echo  "%{r}|CPU:$CPU,Temp: $CPU_TEMP| RAM: $MEM| NET: $NET| $VOL | $DATE | $BAT|"
+done | lemonbar -g 2560x24+0+0 -b "#222222" -F "#ffffff"  -f "FiraCode Nerd Font:stye=bold:size=12" -f "DejaVu Sans Mono-12" 
