@@ -3,8 +3,7 @@
 
 # Adjust your network interface here
 
-NET_IF=$(ip -o link show up|awk -F': ' '{print $2}' | grep -Ev '^(lo|docker0|veth.*)$')
-
+NET_IF=$(ip -o link show up|  ip -o link show up| grep -i 'state UP mode'|awk -F': ' '{print $2}' | grep -Ev '^(lo|docker0|veth.*)$')
 get_cpu_usage() {
     read -r cpu user nice system idle rest < /proc/stat
     total1=$((user + nice + system + idle))
